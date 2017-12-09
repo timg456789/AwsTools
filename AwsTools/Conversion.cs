@@ -61,12 +61,17 @@ namespace AwsTools
 
                 if (attributeValue != null)
                 {
-                    JsonPropertyAttribute attribute = property.GetCustomAttribute<JsonPropertyAttribute>();
-                    kvp.Add(attribute.PropertyName, attributeValue);
+                    var attribute = property.GetCustomAttribute<JsonPropertyAttribute>();
+                    if (attribute != null) // Property may not be marked. Skip it and consider a non-persitent field.
+                    {
+                        kvp.Add(attribute.PropertyName, attributeValue);
+                    }
                 }
             }
 
-            return kvp;
+            return kvp
+                .OrderBy(x => x.Key)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         public static List<T> ConvertToPoco(List<Dictionary<string, AttributeValue>> dynamoDbModels)

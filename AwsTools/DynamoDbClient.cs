@@ -5,7 +5,7 @@ using Amazon.DynamoDBv2;
 
 namespace AwsTools
 {
-    public class DynamoDbClient<T> where T : IModel, new()
+    public class DynamoDbClient<T> : IDynamoDbClient<T> where T : IModel, new()
     {
         private IAmazonDynamoDB Client { get; }
         private ILogging Logging { get; }
