@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
 
 namespace AwsTools
 {
@@ -15,22 +16,31 @@ namespace AwsTools
             Client = client;
             Logging = logging;
         }
-        
-        public List<T> Insert(List<T> ads)
+
+        public void Insert(T model)
         {
-            var adBatchInsert = Conversion<T>.GetBatchInserts(ads);
+            var converted = Conversion<T>.ConvertToDynamoDb(model);
+            var response = Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted)).Result;
+        }
+
+        public List<T> Insert(List<T> models)
+        {
+            if (!models.Any())
+            {
+                return new List<T>();
+            }
+
+            var batches = Conversion<T>.GetBatchInserts(models);
 
             var unprocessed = new List<T>();
-            if (adBatchInsert[new T().GetTable()].Any())
-            {
-                var response = Client.BatchWriteItemAsync(adBatchInsert).Result;
-                var unprocessedBatch = response
-                    .UnprocessedItems
-                    .SelectMany(y => y.Value.Select(x => Conversion<T>.ConvertToPoco(x.PutRequest.Item)));
-                unprocessed.AddRange(unprocessedBatch);
-            }
+            var response = Client.BatchWriteItemAsync(batches).Result;
+            var unprocessedBatch = response
+                .UnprocessedItems
+                .SelectMany(y => y.Value.Select(x => Conversion<T>.ConvertToPoco(x.PutRequest.Item)));
+            unprocessed.AddRange(unprocessedBatch);
 
             return unprocessed;
         }
+
     }
 }

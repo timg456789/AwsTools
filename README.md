@@ -11,16 +11,14 @@ This package is intended to be used within AWS Lambda. I have selected what I ha
 
 ## Increment version in Visual Studio
 
-
     Right-Click AwsTools -> Properties -> Package -> Package Version
-
 
 ## Build
 
-    C:\Users\peon\Desktop\projects\AwsTools\AwsTools>dotnet build --configuration release
+    \projects\AwsTools\AwsTools>dotnet build --configuration release
 
 ## Deploy
 
-    C:\Users\peon\Desktop\projects\AwsTools\AwsTools\bin\release>C:\Users\peon\Desktop\nuget.exe push AwsTools.1.0.2.nupkg -src https://nuget.org/
+    \projects\AwsTools\AwsTools\bin\release>nuget push AwsTools.1.0.2.nupkg -src https://nuget.org/
 
 *`pack` isn't required, because a nuget package is created on build*
