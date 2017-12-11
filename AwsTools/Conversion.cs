@@ -88,10 +88,13 @@ namespace AwsTools
                 var property = model
                     .GetType()
                     .GetProperties()
-                    .Single(x =>
+                    .SingleOrDefault(x =>
                         key.Equals(x.GetCustomAttribute<JsonPropertyAttribute>().PropertyName,
                             StringComparison.OrdinalIgnoreCase));
-
+                if (property == null)
+                {
+                    continue;
+                }
                 object value;
                 if (property.PropertyType == typeof(string))
                 {

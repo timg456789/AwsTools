@@ -31,6 +31,12 @@ namespace AwsToolsTests
         [JsonProperty("s3Path")]
         public string S3Path { get; set; }
 
+        [JsonProperty("labels")]
+        public List<string> Labels { get; set; }
+
+        [JsonProperty("hasFlag")]
+        public bool HasFlag { get; set; }
+
         public Dictionary<string, AttributeValue> GetKey()
         {
             throw new System.NotImplementedException();

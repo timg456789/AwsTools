@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Amazon.DynamoDBv2.Model;
 using AwsTools;
 using Newtonsoft.Json;
 using Xunit;
@@ -7,6 +9,23 @@ namespace AwsToolsTests
 {
     public class ConversionTests
     {
+        [Fact]
+        public void Check_Poco()
+        {
+            var item = new Dictionary<string, AttributeValue>
+            {
+                {Guid.NewGuid().ToString(), new AttributeValue {S = "deprecated field"}},
+                {"source", new AttributeValue {S = "http://url.com"}},
+                {"labels", new AttributeValue {SS = new List<string> {"abc", "123"}}},
+                {"hasFlag", new AttributeValue {S = "True"} }
+            };
+            var model = Conversion<ImageClassification>.ConvertToPoco(item);
+            Assert.Equal("http://url.com", model.Source);
+            Assert.Equal("abc", model.Labels[0]);
+            Assert.Equal("123", model.Labels[1]);
+            Assert.True(model.HasFlag);
+        }
+        
         [Fact]
         public void Check_DynamoDB_Model()
         {
