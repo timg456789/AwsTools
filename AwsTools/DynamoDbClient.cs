@@ -42,5 +42,16 @@ namespace AwsTools
             return unprocessed;
         }
 
+        public T Get(T model)
+        {
+            return Get(model.GetKey());
+        }
+
+        public T Get(Dictionary<string, AttributeValue> key)
+        {
+            var response = Client.GetItemAsync(new T().GetTable(), key).Result;
+            return Conversion<T>.ConvertToPoco(response.Item);
+        }
+
     }
 }
