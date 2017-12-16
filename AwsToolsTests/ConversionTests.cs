@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Amazon.DynamoDBv2.Model;
 using AwsTools;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace AwsToolsTests
 {
     public class ConversionTests
     {
+        [Fact]
+        public void Null_Dictionary_Gets_Null_Poco()
+        {
+            Assert.Null(Conversion<ImageClassification>.ConvertToPoco(default(Dictionary<string, AttributeValue>)));
+        }
+
         [Fact]
         public void Check_Poco()
         {
@@ -29,23 +35,28 @@ namespace AwsToolsTests
         [Fact]
         public void Check_DynamoDB_Model()
         {
-            var model = new ImageClassification();
-
             var random = new Random();
-            model.Source = Guid.NewGuid().ToString();
-            model.PageId = random.Next();
-            model.Artist = Guid.NewGuid().ToString();
-            model.ImageId = random.Next();
-            model.Name = Guid.NewGuid().ToString();
-            model.OriginalArtist = Guid.NewGuid().ToString();
-            model.Date = "1866";
-            model.S3Path = "tgonzalez/something.jpg";
+
+            var model = new ImageClassification
+            {
+                Source = Guid.NewGuid().ToString(),
+                PageId = random.Next(),
+                Artist = Guid.NewGuid().ToString(),
+                ImageId = random.Next(),
+                Name = Guid.NewGuid().ToString(),
+                OriginalArtist = Guid.NewGuid().ToString(),
+                Date = "1866",
+                S3Path = "tgonzalez/something.jpg",
+                HasFlag = true,
+                Labels = new List<string> {"abc"}
+            };
 
             var awsToolsConversion = Conversion<ImageClassification>.ConvertToDynamoDb(model);
-
-            Assert.Equal(
-                $@"{{""artist"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.Artist}"",""SS"":[]}},""date"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.Date}"",""SS"":[]}},""imageId"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":""{model.ImageId}"",""NS"":[],""NULL"":false,""S"":null,""SS"":[]}},""name"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.Name}"",""SS"":[]}},""originalArtist"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.OriginalArtist}"",""SS"":[]}},""pageId"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":""{model.PageId}"",""NS"":[],""NULL"":false,""S"":null,""SS"":[]}},""s3Path"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.S3Path}"",""SS"":[]}},""source"":{{""B"":null,""BOOL"":false,""IsBOOLSet"":false,""BS"":[],""L"":[],""IsLSet"":false,""M"":{{}},""IsMSet"":false,""N"":null,""NS"":[],""NULL"":false,""S"":""{model.Source}"",""SS"":[]}}}}",
-                JsonConvert.SerializeObject(awsToolsConversion));
+            Assert.Equal(model.Source, awsToolsConversion["source"].S);
+            Assert.Equal(model.PageId.ToString(), awsToolsConversion["pageId"].N);
+            Assert.Equal("True", awsToolsConversion["hasFlag"].S);
+            Assert.Equal(awsToolsConversion["labels"].SS.Single(), model.Labels.Single());
+            Assert.Equal("False", Conversion<ImageClassification>.ConvertToDynamoDb(new ImageClassification())["hasFlag"].S);
         }
     }
 }

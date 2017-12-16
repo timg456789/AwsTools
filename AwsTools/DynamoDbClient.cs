@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
@@ -17,13 +18,13 @@ namespace AwsTools
             Logging = logging;
         }
 
-        public void Insert(T model)
+        public async void Insert(T model)
         {
             var converted = Conversion<T>.ConvertToDynamoDb(model);
-            var response = Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted)).Result;
+            await Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted));
         }
 
-        public List<T> Insert(List<T> models)
+        public async Task<List<T>> Insert(List<T> models)
         {
             if (!models.Any())
             {
@@ -33,7 +34,7 @@ namespace AwsTools
             var batches = Conversion<T>.GetBatchInserts(models);
 
             var unprocessed = new List<T>();
-            var response = Client.BatchWriteItemAsync(batches).Result;
+            var response = await Client.BatchWriteItemAsync(batches);
             var unprocessedBatch = response
                 .UnprocessedItems
                 .SelectMany(y => y.Value.Select(x => Conversion<T>.ConvertToPoco(x.PutRequest.Item)));
@@ -42,14 +43,14 @@ namespace AwsTools
             return unprocessed;
         }
 
-        public T Get(T model)
+        public async Task<T> Get(T model)
         {
-            return Get(model.GetKey());
+            return await Get(model.GetKey());
         }
 
-        public T Get(Dictionary<string, AttributeValue> key)
+        public async Task<T> Get(Dictionary<string, AttributeValue> key)
         {
-            var response = Client.GetItemAsync(new T().GetTable(), key).Result;
+            var response = await Client.GetItemAsync(new T().GetTable(), key);
             return Conversion<T>.ConvertToPoco(response.Item);
         }
 

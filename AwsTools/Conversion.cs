@@ -81,6 +81,10 @@ namespace AwsTools
 
         public static T ConvertToPoco(Dictionary<string, AttributeValue> dynamoDbModel)
         {
+            if (dynamoDbModel == default(Dictionary<string, AttributeValue>))
+            {
+                return default(T);
+            }
             var model = new T();
 
             foreach (string key in dynamoDbModel.Keys)
