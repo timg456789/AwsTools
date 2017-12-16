@@ -21,7 +21,7 @@ namespace AwsTools
         public async void Insert(T model)
         {
             var converted = Conversion<T>.ConvertToDynamoDb(model);
-            await Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted));
+            await Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted)).ConfigureAwait(false);
         }
 
         public async Task<List<T>> Insert(List<T> models)
@@ -34,7 +34,7 @@ namespace AwsTools
             var batches = Conversion<T>.GetBatchInserts(models);
 
             var unprocessed = new List<T>();
-            var response = await Client.BatchWriteItemAsync(batches);
+            var response = await Client.BatchWriteItemAsync(batches).ConfigureAwait(false);
             var unprocessedBatch = response
                 .UnprocessedItems
                 .SelectMany(y => y.Value.Select(x => Conversion<T>.ConvertToPoco(x.PutRequest.Item)));
@@ -45,12 +45,12 @@ namespace AwsTools
 
         public async Task<T> Get(T model)
         {
-            return await Get(model.GetKey());
+            return await Get(model.GetKey()).ConfigureAwait(false);
         }
 
         public async Task<T> Get(Dictionary<string, AttributeValue> key)
         {
-            var response = await Client.GetItemAsync(new T().GetTable(), key);
+            var response = await Client.GetItemAsync(new T().GetTable(), key).ConfigureAwait(false);
             return Conversion<T>.ConvertToPoco(response.Item);
         }
 
