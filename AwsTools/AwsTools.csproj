@@ -5,6 +5,10 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	<Version>1.0.10</Version>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageLicenseUrl>https://github.com/timg456789/AwsTools/blob/master/LICENSE.txt</PackageLicenseUrl>
+	<PackageProjectUrl>https://github.com/timg456789/AwsTools</PackageProjectUrl>
+	<PackageTags>AWS Lambda DynamoDB Generics</PackageTags>
+	<Description>AWS DynamoDB client wrapper with generics. Compatible with AWS Lambda.</Description>
   </PropertyGroup>
 
   <ItemGroup>
