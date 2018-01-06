@@ -10,13 +10,13 @@ namespace AwsTools
     public class Conversion<T> where T : IModel, new()
     {
 
-        public static Dictionary<string, AttributeValue> ConvertToDynamoDb(T backpageAd)
+        public static Dictionary<string, AttributeValue> ConvertToDynamoDb(T model)
         {
             var kvp = new Dictionary<string, AttributeValue>();
 
-            foreach (var property in backpageAd.GetType().GetProperties())
+            foreach (var property in model.GetType().GetProperties())
             {
-                object value = property.GetValue(backpageAd);
+                object value = property.GetValue(model);
                 AttributeValue attributeValue = null;
 
                 if (property.PropertyType == typeof(string))
@@ -94,7 +94,7 @@ namespace AwsTools
                     .GetProperties()
                     .SingleOrDefault(x =>
                         key.Equals(x.GetCustomAttribute<JsonPropertyAttribute>().PropertyName,
-                            StringComparison.OrdinalIgnoreCase));
+                            StringComparison.Ordinal));
                 if (property == null)
                 {
                     continue;

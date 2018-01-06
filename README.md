@@ -5,9 +5,9 @@
 - Improve visibility on errors for bulk operations
 - Make it easier to retry failed messages
 
-This package is intended to be used within AWS Lambda. I have selected what I have found to be the best release for AWS Lambda compatibility version 3.3.1.1.
+*This package is intended to be used within AWS Lambda. I have selected what I have found to be the best release for AWS Lambda compatibility version 3.3.1.1.*
 
-# Nuget deploy
+# Nuget Deploy
 
 ## Increment version in Visual Studio
 
@@ -19,6 +19,6 @@ This package is intended to be used within AWS Lambda. I have selected what I ha
 
 ## Deploy
 
-    \projects\AwsTools\AwsTools\bin\release>nuget push AwsTools.1.0.2.nupkg -src https://nuget.org/
+    \projects\AwsTools\AwsTools\bin\release>nuget push AwsTools.1.0.9.nupkg -src https://nuget.org/
 
 *`pack` isn't required, because a nuget package is created on build*

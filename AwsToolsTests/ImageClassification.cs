@@ -34,6 +34,9 @@ namespace AwsToolsTests
         [JsonProperty("labels")]
         public List<string> Labels { get; set; }
 
+        [JsonProperty("Labels")]
+        public List<string> labels { get; set; }
+
         [JsonProperty("hasFlag")]
         public bool HasFlag { get; set; }
 

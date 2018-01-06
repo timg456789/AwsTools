@@ -18,10 +18,12 @@ namespace AwsTools
             Logging = logging;
         }
 
-        public async void Insert(T model)
+        public async Task Insert(T model)
         {
             var converted = Conversion<T>.ConvertToDynamoDb(model);
-            await Client.PutItemAsync(new PutItemRequest(model.GetTable(), converted)).ConfigureAwait(false);
+            await Client
+                .PutItemAsync(new PutItemRequest(model.GetTable(), converted))
+                .ConfigureAwait(false);
         }
 
         public async Task<List<T>> Insert(List<T> models)
