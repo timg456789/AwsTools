@@ -10,5 +10,6 @@ namespace AwsTools
         Task<List<T>> Insert(List<T> models);
         Task<T> Get(T model);
         Task<T> Get(Dictionary<string, AttributeValue> key);
+        Task<List<T>> Get(string index, Dictionary<string, AttributeValue> indexKeys);
     }
 }
