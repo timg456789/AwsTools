@@ -58,7 +58,30 @@ namespace AwsTools
 
         public async Task<List<T>> Get(string index, Dictionary<string, AttributeValue> indexKeys)
         {
-            var request = new QueryRequest(new T().GetTable()) {IndexName = index};
+            var request = new QueryRequest(new T().GetTable())
+            {
+                IndexName = index,
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>(),
+                ExpressionAttributeNames = new Dictionary<string, string>(),
+                KeyConditionExpression = string.Empty
+            };
+
+            foreach (var indexKey in indexKeys.Keys)
+            {
+                var safeKey = "#source" + indexKey;
+                var safeValue = ":" + indexKey;
+
+                request.ExpressionAttributeNames.Add(safeKey, indexKey);
+                request.ExpressionAttributeValues.Add(safeValue, indexKeys[indexKey]);
+
+                if (!string.IsNullOrWhiteSpace(request.KeyConditionExpression))
+                {
+                    request.KeyConditionExpression += " and ";
+                }
+
+                request.KeyConditionExpression += $"{safeKey} = {safeValue}";
+            }
+            
             var response = await Client.QueryAsync(request).ConfigureAwait(false);
             return Conversion<T>.ConvertToPoco(response.Items);
         }
