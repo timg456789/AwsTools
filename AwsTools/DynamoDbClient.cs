@@ -59,7 +59,7 @@ namespace AwsTools
         public async Task<List<T>> Get(string index, Dictionary<string, AttributeValue> indexKeys)
         {
             var request = new QueryRequest(new T().GetTable()) {IndexName = index};
-            var response = await Client.QueryAsync(request);
+            var response = await Client.QueryAsync(request).ConfigureAwait(false);
             return Conversion<T>.ConvertToPoco(response.Items);
         }
 
