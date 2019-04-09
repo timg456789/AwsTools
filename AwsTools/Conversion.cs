@@ -112,9 +112,15 @@ namespace AwsTools
                 {
                     value = dynamoDbModel[key].S;
                 }
-                else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(decimal))
+                else if (property.PropertyType == typeof(int) ||
+                         property.PropertyType == typeof(int?))
                 {
                     value = Convert.ToInt32(dynamoDbModel[key].N);
+                }
+                else if (property.PropertyType == typeof(decimal) ||
+                    property.PropertyType == typeof(decimal?))
+                {
+                    value = Convert.ToDecimal(dynamoDbModel[key].N);
                 }
                 else if (property.PropertyType == typeof(List<string>))
                 {

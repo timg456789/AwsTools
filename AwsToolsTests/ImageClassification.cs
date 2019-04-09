@@ -40,6 +40,15 @@ namespace AwsToolsTests
         [JsonProperty("hasFlag")]
         public bool HasFlag { get; set; }
 
+        [JsonProperty("intNullable")]
+        public int? IntNullable { get; set; }
+
+        [JsonProperty("decimal")]
+        public decimal Decimal { get; set; }
+
+        [JsonProperty("decimalNullable")]
+        public decimal? DecimalNullable { get; set; }
+
         public Dictionary<string, AttributeValue> GetKey()
         {
             throw new System.NotImplementedException();

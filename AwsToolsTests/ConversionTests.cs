@@ -23,13 +23,19 @@ namespace AwsToolsTests
                 {Guid.NewGuid().ToString(), new AttributeValue {S = "deprecated field"}},
                 {"source", new AttributeValue {S = "http://url.com"}},
                 {"labels", new AttributeValue {SS = new List<string> {"abc", "123"}}},
-                {"hasFlag", new AttributeValue {S = "True"} }
+                {"hasFlag", new AttributeValue {S = "True"} },
+                {"intNullable", new AttributeValue { N = "5" }},
+                {"decimal", new AttributeValue { N = "6.5" }},
+                {"decimalNullable", new AttributeValue { N = "7.5" }}
             };
             var model = Conversion<ImageClassification>.ConvertToPoco(item);
             Assert.Equal("http://url.com", model.Source);
             Assert.Equal("abc", model.Labels[0]);
             Assert.Equal("123", model.Labels[1]);
             Assert.True(model.HasFlag);
+            Assert.Equal(5, model.IntNullable);
+            Assert.Equal(6.5m, model.Decimal);
+            Assert.Equal(7.5m, model.DecimalNullable);
         }
         
         [Fact]
@@ -48,7 +54,10 @@ namespace AwsToolsTests
                 Date = "1866",
                 S3Path = "tgonzalez/something.jpg",
                 HasFlag = true,
-                Labels = new List<string> {"abc"}
+                Labels = new List<string> {"abc"},
+                IntNullable = 5,
+                Decimal = 6.5m,
+                DecimalNullable = 7.5m
             };
 
             var awsToolsConversion = Conversion<ImageClassification>.ConvertToDynamoDb(model);
@@ -57,6 +66,9 @@ namespace AwsToolsTests
             Assert.Equal("True", awsToolsConversion["hasFlag"].S);
             Assert.Equal(awsToolsConversion["labels"].SS.Single(), model.Labels.Single());
             Assert.Equal("False", Conversion<ImageClassification>.ConvertToDynamoDb(new ImageClassification())["hasFlag"].S);
+            Assert.Equal(5, model.IntNullable);
+            Assert.Equal(6.5m, model.Decimal);
+            Assert.Equal(7.5m, model.DecimalNullable);
         }
     }
 }
