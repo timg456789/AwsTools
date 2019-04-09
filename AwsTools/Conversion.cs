@@ -112,7 +112,7 @@ namespace AwsTools
                 {
                     value = dynamoDbModel[key].S;
                 }
-                else if (property.PropertyType == typeof(int))
+                else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(decimal))
                 {
                     value = Convert.ToInt32(dynamoDbModel[key].N);
                 }
