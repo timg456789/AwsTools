@@ -34,6 +34,14 @@ namespace AwsTools
                         attributeValue = new AttributeValue {N = value.ToString()};
                     }
                 }
+                else if (property.PropertyType == typeof(decimal) ||
+                    property.PropertyType == typeof(decimal?))
+                {
+                    if (value != null && (decimal) value > 0)
+                    {
+                        attributeValue = new AttributeValue {N = value.ToString()};
+                    }
+                }
                 else if (property.PropertyType == typeof(List<string>))
                 {
                     if (value != null && ((List<string>) value).Any())
