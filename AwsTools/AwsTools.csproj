@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net47</TargetFrameworks>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	<Version>1.0.17</Version>
+	<Version>1.0.18</Version>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageLicenseUrl>https://github.com/timg456789/AwsTools/blob/master/LICENSE.txt</PackageLicenseUrl>
 	<PackageProjectUrl>https://github.com/timg456789/AwsTools</PackageProjectUrl>
