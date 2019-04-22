@@ -34,6 +34,14 @@ namespace AwsTools
                         attributeValue = new AttributeValue {N = value.ToString()};
                     }
                 }
+                else if (property.PropertyType == typeof(long) ||
+                         property.PropertyType == typeof(long?))
+                {
+                    if (value != null && (long) value > 0)
+                    {
+                        attributeValue = new AttributeValue {N = value.ToString()};
+                    }
+                }
                 else if (property.PropertyType == typeof(decimal) ||
                     property.PropertyType == typeof(decimal?))
                 {
@@ -116,6 +124,11 @@ namespace AwsTools
                          property.PropertyType == typeof(int?))
                 {
                     value = Convert.ToInt32(dynamoDbModel[key].N);
+                }
+                else if (property.PropertyType == typeof(long) ||
+                         property.PropertyType == typeof(long?))
+                {
+                    value = Convert.ToInt64(dynamoDbModel[key].N);
                 }
                 else if (property.PropertyType == typeof(decimal) ||
                     property.PropertyType == typeof(decimal?))
